@@ -223,13 +223,9 @@ export default class ServerlessOffline {
     }
 
     // Parse CORS options
-    this._options.corsExposedHeaders = this._options.corsExposedHeaders
-      .replace(/\s/g, '')
-      .split(',')
-
     this._options.corsConfig = {
       credentials: this._options.corsAllowCredentials,
-      exposedHeaders: this._options.corsExposedHeaders,
+      // exposedHeaders: this._options.corsExposedHeaders,
       // origin: this._options.corsAllowOrigin,
     }
 

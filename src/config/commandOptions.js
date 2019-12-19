@@ -3,10 +3,6 @@ export default {
     usage:
       'Defines the API key value to be used for endpoints marked as private. Defaults to a random hash.',
   },
-  corsExposedHeaders: {
-    usage:
-      'USed to build the Access-Control-Exposed-Headers response header for CORS support',
-  },
   disableCookieValidation: {
     usage: 'Used to disable cookie-validation on hapi.js-server',
   },

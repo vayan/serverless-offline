@@ -105,7 +105,6 @@ All CLI options are optional:
 
 ```
 --apiKey                    Defines the API key value to be used for endpoints marked as private Defaults to a random hash.
---corsExposedHeaders        Used as additional Access-Control-Exposed-Headers header value for responses. Delimit multiple values with commas. Default: 'WWW-Authenticate,Server-Authorization'
 --disableCookieValidation   Used to disable cookie-validation on hapi.js-server
 --enforceSecureCookies      Enforce secure cookies
 --hideStackTraces           Hide the stack trace on lambda failure. Default: false
