@@ -3,10 +3,6 @@ export default {
     usage:
       'Defines the API key value to be used for endpoints marked as private. Defaults to a random hash.',
   },
-  corsAllowHeaders: {
-    usage:
-      'Used to build the Access-Control-Allow-Headers header for CORS support.',
-  },
   corsAllowOrigin: {
     usage:
       'Used to build the Access-Control-Allow-Origin header for CORS support.',
