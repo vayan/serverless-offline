@@ -227,10 +227,6 @@ export default class ServerlessOffline {
       .replace(/\s/g, '')
       .split(',')
 
-    if (this._options.corsDisallowCredentials) {
-      this._options.corsAllowCredentials = false
-    }
-
     this._options.corsConfig = {
       credentials: this._options.corsAllowCredentials,
       exposedHeaders: this._options.corsExposedHeaders,
