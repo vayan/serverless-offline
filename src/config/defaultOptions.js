@@ -3,7 +3,6 @@ import { createApiKey } from '../utils/index.js'
 export default {
   apiKey: createApiKey(),
   corsAllowCredentials: true, // TODO no CLI option
-  corsAllowOrigin: '*',
   corsExposedHeaders: 'WWW-Authenticate,Server-Authorization',
   disableCookieValidation: false,
   enforceSecureCookies: false,
