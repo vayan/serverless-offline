@@ -2,7 +2,6 @@ import { createApiKey } from '../utils/index.js'
 
 export default {
   apiKey: createApiKey(),
-  corsAllowCredentials: true, // TODO no CLI option
   disableCookieValidation: false,
   enforceSecureCookies: false,
   hideStackTraces: false,

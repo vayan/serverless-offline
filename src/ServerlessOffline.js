@@ -224,7 +224,7 @@ export default class ServerlessOffline {
 
     // Parse CORS options
     this._options.corsConfig = {
-      credentials: this._options.corsAllowCredentials,
+      // credentials: this._options.corsAllowCredentials,
       // exposedHeaders: this._options.corsExposedHeaders,
       // origin: this._options.corsAllowOrigin,
     }
