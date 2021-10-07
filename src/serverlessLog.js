@@ -2,8 +2,8 @@ import boxen from 'boxen'
 import chalk from 'chalk'
 import { getPluginWriters, legacy } from '@serverless/utils/log'
 
-const { log: modernLog } = getPluginWriters('serverless-offline')
-export { modernLog as log }
+const { log: modernLog, progress } = getPluginWriters('serverless-offline')
+export { modernLog as log, progress }
 
 const { max } = Math
 
@@ -34,7 +34,7 @@ export default function serverlessLog(msg) {
 }
 
 export function logLayers(msg) {
-  console.log(`offline: ${blue(msg)}`)
+  legacy.consoleLog(`offline: ${blue(msg)}`)
 }
 
 export function setLog(serverlessLogRef) {
