@@ -1,5 +1,5 @@
 import debugLog from '../debugLog.js'
-import { logWarning } from '../serverlessLog.js'
+import { log, logWarning } from '../serverlessLog.js'
 
 export default function getHttpApiCorsConfig(httpApiCors) {
   if (httpApiCors === true) {
@@ -19,9 +19,11 @@ export default function getHttpApiCorsConfig(httpApiCors) {
     }
     debugLog(c)
     logWarning(c)
+    log.warning(c)
     return c
   }
   debugLog(httpApiCors)
   logWarning(httpApiCors)
+  log.warning(httpApiCors)
   return httpApiCors
 }

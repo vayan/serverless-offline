@@ -1,5 +1,5 @@
 import debugLog from '../../debugLog.js'
-import { logWarning } from '../../serverlessLog.js'
+import { log, logWarning } from '../../serverlessLog.js'
 import {
   supportedNodejs,
   supportedPython,
@@ -41,6 +41,9 @@ export default class HandlerRunner {
     if (useDocker) {
       // https://github.com/lambci/docker-lambda/issues/329
       if (runtime === 'nodejs14.x') {
+        log.warning(
+          '"nodejs14.x" runtime is not supported with docker. See https://github.com/lambci/docker-lambda/issues/329',
+        )
         logWarning(
           '"nodejs14.x" runtime is not supported with docker. See https://github.com/lambci/docker-lambda/issues/329',
         )
@@ -48,6 +51,7 @@ export default class HandlerRunner {
       }
 
       if (runtime === 'python3.9') {
+        log.warning('"python3.9" runtime is not supported with docker.')
         logWarning('"python3.9" runtime is not supported with docker.')
         throw new Error('Unsupported runtime')
       }
@@ -125,6 +129,11 @@ export default class HandlerRunner {
 
     // we're happy
     if (!versionIsSatisfied) {
+      log.warning(
+        `"worker threads" require node.js version ${requiredVersionRange}, but found version ${currentVersion}.
+         To use this feature you have to update node.js to a later version.
+        `,
+      )
       logWarning(
         `"worker threads" require node.js version ${requiredVersionRange}, but found version ${currentVersion}.
          To use this feature you have to update node.js to a later version.

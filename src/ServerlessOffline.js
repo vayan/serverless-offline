@@ -1,6 +1,6 @@
 import updateNotifier from 'update-notifier'
 import debugLog from './debugLog.js'
-import serverlessLog, { logWarning, setLog } from './serverlessLog.js'
+import serverlessLog, { log, logWarning, setLog } from './serverlessLog.js'
 import { satisfiesVersionRange } from './utils/index.js'
 import {
   commandOptions,
@@ -300,6 +300,9 @@ export default class ServerlessOffline {
               }
             } else if (typeof httpEvent.http === 'object') {
               if (!httpEvent.http.method) {
+                log.warning(
+                  `Event definition is missing a method for function "${functionKey}"`,
+                )
                 logWarning(
                   `Event definition is missing a method for function "${functionKey}"`,
                 )
@@ -315,6 +318,9 @@ export default class ServerlessOffline {
               delete httpEvent.http.method
               delete httpEvent.http.path
             } else {
+              log.warning(
+                `Event definition must be a string or object but received ${typeof httpEvent.http} for function "${functionKey}"`,
+              )
               logWarning(
                 `Event definition must be a string or object but received ${typeof httpEvent.http} for function "${functionKey}"`,
               )
@@ -388,6 +394,12 @@ export default class ServerlessOffline {
     )
 
     if (!versionIsSatisfied) {
+      log.warning(
+        `serverless-offline requires serverless version ${requiredVersionRange} but found version ${currentVersion}.
+         Be aware that functionality might be limited or contains bugs.
+         To avoid any issues update serverless to a later version.
+        `,
+      )
       logWarning(
         `serverless-offline requires serverless version ${requiredVersionRange} but found version ${currentVersion}.
          Be aware that functionality might be limited or contains bugs.

@@ -10,7 +10,7 @@ import { dirname, join, sep } from 'path'
 import crypto from 'crypto'
 import DockerImage from './DockerImage.js'
 import debugLog from '../../../debugLog.js'
-import { logLayers, logWarning } from '../../../serverlessLog.js'
+import { logLayers, log, logWarning } from '../../../serverlessLog.js'
 
 const { stringify } = JSON
 const { entries } = Object
@@ -228,6 +228,7 @@ export default class DockerContainer {
     try {
       layer = await this.#lambda.getLayerVersionByArn(params).promise()
     } catch (e) {
+      log.warning(`[${layerName}] ${e.code}: ${e.message}`)
       logWarning(`[${layerName}] ${e.code}: ${e.message}`)
       return
     }
@@ -236,6 +237,9 @@ export default class DockerContainer {
       Object.prototype.hasOwnProperty.call(layer, 'CompatibleRuntimes') &&
       !layer.CompatibleRuntimes.includes(this.#runtime)
     ) {
+      log.warning(
+        `[${layerName}] Layer is not compatible with ${this.#runtime} runtime`,
+      )
       logWarning(
         `[${layerName}] Layer is not compatible with ${this.#runtime} runtime`,
       )
@@ -256,6 +260,9 @@ export default class DockerContainer {
     })
 
     if (!res.ok) {
+      log.warning(
+        `[${layerName}] Failed to fetch from ${layerUrl} with ${res.statusText}`,
+      )
       logWarning(
         `[${layerName}] Failed to fetch from ${layerUrl} with ${res.statusText}`,
       )

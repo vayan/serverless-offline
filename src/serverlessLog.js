@@ -1,5 +1,9 @@
 import boxen from 'boxen'
 import chalk from 'chalk'
+import { getPluginWriters, legacy } from '@serverless/utils/log'
+
+const { log: modernLog } = getPluginWriters('serverless-offline')
+export { modernLog as log }
 
 const { max } = Math
 
@@ -79,5 +83,5 @@ export function logRoutes(routeInfo) {
 }
 
 export function logWarning(msg) {
-  console.log(`offline: ${red(msg)}`)
+  legacy.consoleLog(`offline: ${red(msg)}`)
 }
