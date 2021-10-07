@@ -2,7 +2,9 @@ import boxen from 'boxen'
 import chalk from 'chalk'
 import { getPluginWriters, legacy } from '@serverless/utils/log'
 
-const { log: modernLog, progress } = getPluginWriters('serverless-offline')
+const { log: modernLog, progress, writeText } = getPluginWriters(
+  'serverless-offline',
+)
 export { modernLog as log, progress }
 
 const { max } = Math
@@ -66,7 +68,22 @@ export function logRoutes(routeInfo) {
   }
   const maxLength = getMaxHttpMethodNameLength(routeInfo)
 
-  console.log(
+  legacy.consoleLog(
+    boxen(
+      routeInfo
+        .map(
+          ({ method, path, server, invokePath }) =>
+            // eslint-disable-next-line prefer-template
+            logRoute(method, server, path, maxLength) +
+            '\n' +
+            logRoute('POST', server, invokePath, maxLength, true),
+        )
+        .join('\n'),
+      boxenOptions,
+    ),
+  )
+
+  writeText(
     boxen(
       routeInfo
         .map(
