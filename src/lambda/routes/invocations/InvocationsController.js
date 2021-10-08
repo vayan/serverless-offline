@@ -1,4 +1,4 @@
-import serverlessLog from '../../../serverlessLog.js'
+import serverlessLog, { log, legacy } from '../../../serverlessLog.js'
 
 export default class InvocationsController {
   #lambda = null
@@ -12,6 +12,9 @@ export default class InvocationsController {
     const functionNames = this.#lambda.listFunctionNames()
     if (functionNames.length === 0 || !functionNames.includes(functionName)) {
       serverlessLog(
+        `Attempt to invoke function '${functionName}' failed. Function does not exists.`,
+      )
+      log.error(
         `Attempt to invoke function '${functionName}' failed. Function does not exists.`,
       )
       // Conforms to the actual response from AWS Lambda when invoking a non-existent
@@ -54,7 +57,10 @@ export default class InvocationsController {
         serverlessLog(
           `Unhandled Lambda Error during invoke of '${functionName}'`,
         )
-        console.log(err)
+        log.error(
+          `Unhandled Lambda Error during invoke of '${functionName}': ${err}`,
+        )
+        legacy.consoleLog(err)
         // In most circumstances this is the correct error type/structure.
         // The API returns a StreamingBody with status code of 200
         // that eventually spits out the error and stack trace.

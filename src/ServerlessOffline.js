@@ -1,6 +1,11 @@
 import updateNotifier from 'update-notifier'
 import debugLog from './debugLog.js'
-import serverlessLog, { log, logWarning, setLog } from './serverlessLog.js'
+import serverlessLog, {
+  log,
+  style,
+  legacy,
+  logWarning,
+} from './serverlessLog.js'
 import { satisfiesVersionRange } from './utils/index.js'
 import {
   commandOptions,
@@ -22,8 +27,6 @@ export default class ServerlessOffline {
   constructor(serverless, cliOptions) {
     this.#cliOptions = cliOptions
     this.#serverless = serverless
-
-    setLog((...args) => serverless.cli.log(...args))
 
     this.commands = {
       offline: {
@@ -52,7 +55,7 @@ export default class ServerlessOffline {
 
   _printBlankLine() {
     if (process.env.NODE_ENV !== 'test') {
-      console.log()
+      legacy.consoleLog()
     }
   }
 
@@ -109,6 +112,7 @@ export default class ServerlessOffline {
     }
 
     serverlessLog('Halting offline server')
+    log.info('Halting offline server')
 
     const eventModules = []
 
@@ -160,6 +164,7 @@ export default class ServerlessOffline {
     })
 
     serverlessLog(`Got ${command} signal. Offline Halting...`)
+    log.info(`Got ${command} signal. Offline Halting...`)
   }
 
   async _createLambda(lambdas, skipStart) {
@@ -258,7 +263,14 @@ export default class ServerlessOffline {
       origin: this.#options.corsAllowOrigin,
     }
 
-    serverlessLog(`Starting Offline: ${provider.stage}/${provider.region}.`)
+    serverlessLog(`Starting Offline: ${provider.stage} ${provider.region}.`)
+    log.notice()
+    log.notice(
+      `Starting Offline at stage ${provider.stage} ${style.aside(
+        `{${provider.region})`,
+      )}`,
+    )
+    log.notice()
     debugLog('options:', this.#options)
   }
 
@@ -360,13 +372,18 @@ export default class ServerlessOffline {
     // for simple API Key authentication model
     if (hasPrivateHttpEvent) {
       serverlessLog(`Key with token: ${this.#options.apiKey}`)
+      log.notice(`Key with token: ${this.#options.apiKey}`)
 
       if (this.#options.noAuth) {
         serverlessLog(
           'Authorizers are turned off. You do not need to use x-api-key header.',
         )
+        log.notice(
+          'Authorizers are turned off. You do not need to use x-api-key header.',
+        )
       } else {
         serverlessLog('Remember to use x-api-key on the request headers')
+        log.notice('Remember to use x-api-key on the request headers')
       }
     }
 

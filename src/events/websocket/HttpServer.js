@@ -1,6 +1,6 @@
 import { Server } from '@hapi/hapi'
 import { catchAllRoute, connectionsRoutes } from './http-routes/index.js'
-import serverlessLog from '../../serverlessLog.js'
+import serverlessLog, { log } from '../../serverlessLog.js'
 
 export default class HttpServer {
   #options = null
@@ -47,6 +47,11 @@ export default class HttpServer {
     }
 
     serverlessLog(
+      `Offline [http for websocket] listening on http${
+        httpsProtocol ? 's' : ''
+      }://${host}:${websocketPort}`,
+    )
+    log.notice(
       `Offline [http for websocket] listening on http${
         httpsProtocol ? 's' : ''
       }://${host}:${websocketPort}`,

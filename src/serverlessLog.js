@@ -1,11 +1,9 @@
 import boxen from 'boxen'
 import chalk from 'chalk'
-import { getPluginWriters, legacy } from '@serverless/utils/log'
+import { getPluginWriters, legacy, style } from '@serverless/utils/log'
 
-const { log: modernLog, progress, writeText } = getPluginWriters(
-  'serverless-offline',
-)
-export { modernLog as log, progress }
+const { log, progress, writeText } = getPluginWriters('serverless-offline')
+export { log, progress, style, legacy }
 
 const { max } = Math
 
@@ -27,20 +25,12 @@ const colorMethodMapping = new Map([
   ['PUT', blue],
 ])
 
-let log
-
 export default function serverlessLog(msg) {
-  if (log) {
-    log(msg, 'offline')
-  }
+  legacy.log(msg, 'offline')
 }
 
 export function logLayers(msg) {
   legacy.consoleLog(`offline: ${blue(msg)}`)
-}
-
-export function setLog(serverlessLogRef) {
-  log = serverlessLogRef
 }
 
 // logs based on:

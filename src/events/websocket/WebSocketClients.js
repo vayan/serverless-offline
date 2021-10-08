@@ -5,7 +5,7 @@ import {
   WebSocketEvent,
 } from './lambda-events/index.js'
 import debugLog from '../../debugLog.js'
-import serverlessLog from '../../serverlessLog.js'
+import serverlessLog, { log } from '../../serverlessLog.js'
 import {
   DEFAULT_WEBSOCKETS_API_ROUTE_SELECTION_EXPRESSION,
   DEFAULT_WEBSOCKETS_ROUTE,
@@ -200,6 +200,7 @@ export default class WebSocketClients {
     this.#webSocketRoutes.set(route, functionKey)
 
     serverlessLog(`route '${route}'`)
+    log.notice(`route '${route}'`)
   }
 
   close(connectionId) {

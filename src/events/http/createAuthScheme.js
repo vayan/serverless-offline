@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom'
 import authCanExecuteResource from './authCanExecuteResource.js'
 import debugLog from '../../debugLog.js'
-import serverlessLog from '../../serverlessLog.js'
+import serverlessLog, { log, legacy } from '../../serverlessLog.js'
 import {
   nullIfEmpty,
   parseHeaders,
@@ -29,8 +29,11 @@ export default function createAuthScheme(authorizerOptions, provider, lambda) {
   // Create Auth Scheme
   return () => ({
     async authenticate(request, h) {
-      console.log('') // Just to make things a little pretty
+      legacy.consoleLog('') // Just to make things a little pretty
       serverlessLog(
+        `Running Authorization function for ${request.method} ${request.path} (λ: ${authFunName})`,
+      )
+      log.notice(
         `Running Authorization function for ${request.method} ${request.path} (λ: ${authFunName})`,
       )
 
@@ -118,12 +121,18 @@ export default function createAuthScheme(authorizerOptions, provider, lambda) {
           serverlessLog(
             `Authorization response did not include a principalId: (λ: ${authFunName})`,
           )
+          log.notice(
+            `Authorization response did not include a principalId: (λ: ${authFunName})`,
+          )
 
           return Boom.forbidden('No principalId set on the Response')
         }
 
         if (!authCanExecuteResource(policy.policyDocument, event.methodArn)) {
           serverlessLog(
+            `Authorization response didn't authorize user to access resource: (λ: ${authFunName})`,
+          )
+          log.notice(
             `Authorization response didn't authorize user to access resource: (λ: ${authFunName})`,
           )
 
@@ -133,6 +142,9 @@ export default function createAuthScheme(authorizerOptions, provider, lambda) {
         }
 
         serverlessLog(
+          `Authorization function returned a successful response: (λ: ${authFunName})`,
+        )
+        log.notice(
           `Authorization function returned a successful response: (λ: ${authFunName})`,
         )
 
@@ -154,6 +166,9 @@ export default function createAuthScheme(authorizerOptions, provider, lambda) {
         })
       } catch (err) {
         serverlessLog(
+          `Authorization function returned an error response: (λ: ${authFunName})`,
+        )
+        log.notice(
           `Authorization function returned an error response: (λ: ${authFunName})`,
         )
 

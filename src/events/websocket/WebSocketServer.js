@@ -1,6 +1,6 @@
 import { Server } from 'ws'
 import debugLog from '../../debugLog.js'
-import serverlessLog from '../../serverlessLog.js'
+import serverlessLog, { log } from '../../serverlessLog.js'
 import { createUniqueId } from '../../utils/index.js'
 
 export default class WebSocketServer {
@@ -30,6 +30,11 @@ export default class WebSocketServer {
     const { host, httpsProtocol, websocketPort } = this.#options
 
     serverlessLog(
+      `Offline [websocket] listening on ws${
+        httpsProtocol ? 's' : ''
+      }://${host}:${websocketPort}`,
+    )
+    log.notice(
       `Offline [websocket] listening on ws${
         httpsProtocol ? 's' : ''
       }://${host}:${websocketPort}`,

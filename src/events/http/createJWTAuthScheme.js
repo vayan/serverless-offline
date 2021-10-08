@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom'
 import jwt from 'jsonwebtoken'
-import serverlessLog from '../../serverlessLog.js'
+import serverlessLog, { log, legacy } from '../../serverlessLog.js'
 
 export default function createAuthScheme(jwtOptions) {
   const authorizerName = jwtOptions.name
@@ -18,13 +18,16 @@ export default function createAuthScheme(jwtOptions) {
   // Create Auth Scheme
   return () => ({
     async authenticate(request, h) {
-      console.log('') // Just to make things a little pretty
+      legacy.consoleLog('') // Just to make things a little pretty
 
       // TODO: this only validates specific properties of the JWT
       // it does not verify the JWT is correctly signed. That would
       // be a great feature to add under an optional flag :)
 
       serverlessLog(
+        `Running JWT Authorization function for ${request.method} ${request.path} (${authorizerName})`,
+      )
+      log.notice(
         `Running JWT Authorization function for ${request.method} ${request.path} (${authorizerName})`,
       )
 
@@ -50,6 +53,7 @@ export default function createAuthScheme(jwtOptions) {
         const clientId = decoded.payload.client_id
         if (iss !== jwtOptions.issuerUrl) {
           serverlessLog(`JWT Token not from correct issuer url`)
+          log.notice(`JWT Token not from correct issuer url`)
           return Boom.unauthorized('JWT Token not from correct issuer url')
         }
 
@@ -63,6 +67,7 @@ export default function createAuthScheme(jwtOptions) {
 
         if (!validAudienceProvided && !validAudiences.includes(clientId)) {
           serverlessLog(`JWT Token does not contain correct audience`)
+          log.notice(`JWT Token does not contain correct audience`)
           return Boom.unauthorized(
             'JWT Token does not contain correct audience',
           )
@@ -72,6 +77,7 @@ export default function createAuthScheme(jwtOptions) {
         if (jwtOptions.scopes && jwtOptions.scopes.length) {
           if (!scope) {
             serverlessLog(`JWT Token missing valid scope`)
+            log.notice(`JWT Token missing valid scope`)
             return Boom.forbidden('JWT Token missing valid scope')
           }
 
@@ -82,11 +88,13 @@ export default function createAuthScheme(jwtOptions) {
             })
           ) {
             serverlessLog(`JWT Token missing valid scope`)
+            log.notice(`JWT Token missing valid scope`)
             return Boom.forbidden('JWT Token missing valid scope')
           }
         }
 
         serverlessLog(`JWT Token validated`)
+        log.notice(`JWT Token validated`)
 
         // Set the credentials for the rest of the pipeline
         // return resolve(
@@ -98,7 +106,9 @@ export default function createAuthScheme(jwtOptions) {
         })
       } catch (err) {
         serverlessLog(`JWT could not be decoded`)
+        log.notice(`JWT could not be decoded`)
         serverlessLog(err)
+        log.error(err)
 
         return Boom.unauthorized('Unauthorized')
       }

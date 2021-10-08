@@ -4,7 +4,7 @@ import { performance } from 'perf_hooks'
 import jszip from 'jszip'
 import HandlerRunner from './handler-runner/index.js'
 import LambdaContext from './LambdaContext.js'
-import serverlessLog from '../serverlessLog.js'
+import serverlessLog, { log } from '../serverlessLog.js'
 import resolveJoins from '../utils/resolveJoins.js'
 import {
   DEFAULT_LAMBDA_MEMORY_SIZE,
@@ -151,6 +151,12 @@ export default class LambdaFunction {
           this.#functionKey
         }'`,
       )
+      log.warning()
+      log.warning(
+        `Warning: found unsupported runtime '${this.#runtime}' for function '${
+          this.#functionKey
+        }'`,
+      )
     }
   }
 
@@ -273,6 +279,13 @@ export default class LambdaFunction {
     // TEMP TODO FIXME find better solution
     if (!this.#handlerRunner.isDockerRunner()) {
       serverlessLog(
+        `(λ: ${
+          this.#functionKey
+        }) RequestId: ${requestId}  Duration: ${this._executionTimeInMillis().toFixed(
+          2,
+        )} ms  Billed Duration: ${this._billedExecutionTimeInMillis()} ms`,
+      )
+      log.notice(
         `(λ: ${
           this.#functionKey
         }) RequestId: ${requestId}  Duration: ${this._executionTimeInMillis().toFixed(
