@@ -297,6 +297,7 @@ export default class HttpServer {
     const authStrategyName = `strategy-${authKey}` // set strategy name for the route config
 
     debugLog(`Creating Authorization scheme for ${authKey}`)
+    log.debug(`Creating Authorization scheme for ${authKey}`)
 
     // Create the Auth Scheme for the endpoint
     const scheme = createJWTAuthScheme(jwtSettings)
@@ -357,6 +358,7 @@ export default class HttpServer {
     const authStrategyName = `strategy-${authKey}` // set strategy name for the route config
 
     debugLog(`Creating Authorization scheme for ${authKey}`)
+    log.debug(`Creating Authorization scheme for ${authKey}`)
 
     // Create the Auth Scheme for the endpoint
     const scheme = createAuthScheme(
@@ -571,6 +573,7 @@ export default class HttpServer {
           }
         } else {
           debugLog(`Missing x-api-key on private function ${functionKey}`)
+          log.debug(`Missing x-api-key on private function ${functionKey}`)
 
           return errorResponse()
         }
@@ -612,16 +615,21 @@ export default class HttpServer {
           request.payload = parse(request.payload)
         } catch (err) {
           debugLog('error in converting request.payload to JSON:', err)
+          log.debug('error in converting request.payload to JSON:', err)
         }
       }
 
       debugLog('contentType:', contentType)
+      log.debug('contentType:', contentType)
       debugLog('requestTemplate:', requestTemplate)
+      log.debug('requestTemplate:', requestTemplate)
       debugLog('payload:', request.payload)
+      log.debug('payload:', request.payload)
 
       /* REQUEST PAYLOAD SCHEMA VALIDATION */
       if (schema) {
         debugLog('schema:', schema)
+        log.debug('schema:', schema)
         try {
           payloadSchemaValidator.validate(schema, request.payload)
         } catch (err) {
@@ -637,6 +645,7 @@ export default class HttpServer {
         if (requestTemplate) {
           try {
             debugLog('_____ REQUEST TEMPLATE PROCESSING _____')
+            log.debug('_____ REQUEST TEMPLATE PROCESSING _____')
 
             event = new LambdaIntegrationEvent(
               request,
@@ -679,6 +688,7 @@ export default class HttpServer {
       }
 
       debugLog('event:', event)
+      log.debug('event:', event)
 
       const lambdaFunction = this.#lambda.get(functionKey)
 
@@ -696,6 +706,7 @@ export default class HttpServer {
       // const processResponse = (err, data) => {
       // Everything in this block happens once the lambda function has resolved
       debugLog('_____ HANDLER RESOLVED _____')
+      log.debug('_____ HANDLER RESOLVED _____')
 
       let responseName = 'default'
       const { contentHandling, responseContentType } = endpoint
@@ -756,6 +767,7 @@ export default class HttpServer {
       }
 
       debugLog(`Using response '${responseName}'`)
+      log.debug(`Using response '${responseName}'`)
       const chosenResponse = endpoint.responses[responseName]
 
       /* RESPONSE PARAMETERS PROCCESSING */
@@ -766,6 +778,7 @@ export default class HttpServer {
         const responseParametersKeys = Object.keys(responseParameters)
 
         debugLog('_____ RESPONSE PARAMETERS PROCCESSING _____')
+        log.debug('_____ RESPONSE PARAMETERS PROCCESSING _____')
         debugLog(
           `Found ${responseParametersKeys.length} responseParameters for '${responseName}' response`,
         )
@@ -776,16 +789,19 @@ export default class HttpServer {
           const valueArray = value.split('.') // eg: "integration.response.body.redirect.url"
 
           debugLog(`Processing responseParameter "${key}": "${value}"`)
+          log.debug(`Processing responseParameter "${key}": "${value}"`)
 
           // For now the plugin only supports modifying headers
           if (key.startsWith('method.response.header') && keyArray[3]) {
             const headerName = keyArray.slice(3).join('.')
             let headerValue
             debugLog('Found header in left-hand:', headerName)
+            log.debug('Found header in left-hand:', headerName)
 
             if (value.startsWith('integration.response')) {
               if (valueArray[2] === 'body') {
                 debugLog('Found body in right-hand')
+                log.debug('Found body in right-hand')
                 headerValue = valueArray[3]
                   ? jsonPath(result, valueArray.slice(3).join('.'))
                   : result
@@ -825,6 +841,9 @@ export default class HttpServer {
               )
             } else {
               debugLog(`Will assign "${headerValue}" to header "${headerName}"`)
+              log.debug(
+                `Will assign "${headerValue}" to header "${headerName}"`,
+              )
               response.header(headerName, headerValue)
             }
           } else {
@@ -871,7 +890,9 @@ export default class HttpServer {
 
             if (responseTemplate && responseTemplate !== '\n') {
               debugLog('_____ RESPONSE TEMPLATE PROCCESSING _____')
+              log.debug('_____ RESPONSE TEMPLATE PROCCESSING _____')
               debugLog(`Using responseTemplate '${responseContentType}'`)
+              log.debug(`Using responseTemplate '${responseContentType}'`)
 
               try {
                 const reponseContext = new VelocityContext(
@@ -979,6 +1000,7 @@ export default class HttpServer {
         }
 
         debugLog('headers', headers)
+        log.debug('headers', headers)
 
         const parseCookies = (headerValue) => {
           const cookieName = headerValue.slice(0, headerValue.indexOf('='))

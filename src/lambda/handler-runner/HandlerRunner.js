@@ -37,6 +37,7 @@ export default class HandlerRunner {
     } = this.#funOptions
 
     debugLog(`Loading handler... (${handlerPath})`)
+    log.debug(`Loading handler... (${handlerPath})`)
 
     if (useDocker) {
       // https://github.com/lambci/docker-lambda/issues/329

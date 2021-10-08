@@ -1,4 +1,5 @@
 import debugLog from '../../../../debugLog.js'
+import { log } from '../../../../serverlessLog.js'
 
 export default function catchAllRoute() {
   return {
@@ -8,6 +9,7 @@ export default function catchAllRoute() {
       const { url } = request
 
       debugLog(`got GET to ${url}`)
+      log.debug(`got GET to ${url}`)
 
       return h.response(null).code(426)
     },

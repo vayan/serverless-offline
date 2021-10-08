@@ -1,6 +1,7 @@
 import execa from 'execa'
 import promiseMemoize from 'p-memoize'
 import debugLog from '../../../debugLog.js'
+import { log } from '../../../serverlessLog.js'
 
 export default class DockerImage {
   #imageNameTag = null
@@ -11,6 +12,7 @@ export default class DockerImage {
 
   static async _pullImage(imageNameTag) {
     debugLog(`Downloading base Docker image... (${imageNameTag})`)
+    log.debug(`Downloading base Docker image... (${imageNameTag})`)
 
     try {
       await execa('docker', [

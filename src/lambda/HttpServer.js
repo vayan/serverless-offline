@@ -92,7 +92,39 @@ export default class HttpServer {
           ),
       ].join('\n'),
     )
+    log.debug(
+      [
+        `Lambda Invocation Routes (for AWS SDK or AWS CLI):`,
+        ...this.#lambda
+          .listFunctionNames()
+          .map(
+            (functionName) =>
+              `           * ${
+                _invocationsRoute.method
+              } ${basePath}${_invocationsRoute.path.replace(
+                '{functionName}',
+                functionName,
+              )}`,
+          ),
+      ].join('\n'),
+    )
     debugLog(
+      [
+        `Lambda Async Invocation Routes (for AWS SDK or AWS CLI):`,
+        ...this.#lambda
+          .listFunctionNames()
+          .map(
+            (functionName) =>
+              `           * ${
+                _invokeAsyncRoute.method
+              } ${basePath}${_invokeAsyncRoute.path.replace(
+                '{functionName}',
+                functionName,
+              )}`,
+          ),
+      ].join('\n'),
+    )
+    log.debug(
       [
         `Lambda Async Invocation Routes (for AWS SDK or AWS CLI):`,
         ...this.#lambda

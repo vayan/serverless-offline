@@ -272,6 +272,7 @@ export default class ServerlessOffline {
     )
     log.notice()
     debugLog('options:', this.#options)
+    log.debug('options:', this.#options)
   }
 
   _getEvents() {

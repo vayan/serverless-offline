@@ -54,6 +54,7 @@ export default class WebSocketClients {
   _addHardTimeout(client, connectionId) {
     const timeoutId = setTimeout(() => {
       debugLog(`timeout:hard:${connectionId}`)
+      log.debug(`timeout:hard:${connectionId}`)
       client.close(1001, 'Going away')
     }, this.#options.webSocketHardTimeout * 1000)
     this.#hardTimeouts.set(client, timeoutId)
@@ -68,9 +69,11 @@ export default class WebSocketClients {
     const client = this._getWebSocketClient(connectionId)
     this._clearIdleTimeout(client)
     debugLog(`timeout:idle:${connectionId}:reset`)
+    log.debug(`timeout:idle:${connectionId}:reset`)
 
     const timeoutId = setTimeout(() => {
       debugLog(`timeout:idle:${connectionId}:trigger`)
+      log.debug(`timeout:idle:${connectionId}:trigger`)
       client.close(1001, 'Going away')
     }, this.#options.webSocketIdleTimeout * 1000)
     this.#idleTimeouts.set(client, timeoutId)
@@ -109,6 +112,7 @@ export default class WebSocketClients {
       }
 
       debugLog(`Error in route handler '${functionKey}'`, err)
+      log.debug(`Error in route handler '${functionKey}'`, err)
     }
 
     const lambdaFunction = this.#lambda.get(functionKey)
@@ -163,6 +167,7 @@ export default class WebSocketClients {
 
     webSocketClient.on('close', () => {
       debugLog(`disconnect:${connectionId}`)
+      log.debug(`disconnect:${connectionId}`)
 
       this._removeWebSocketClient(webSocketClient)
 
@@ -183,10 +188,12 @@ export default class WebSocketClients {
 
     webSocketClient.on('message', (message) => {
       debugLog(`message:${message}`)
+      log.debug(`message:${message}`)
 
       const route = this._getRoute(message)
 
       debugLog(`route:${route} on connection=${connectionId}`)
+      log.debug(`route:${route} on connection=${connectionId}`)
 
       const event = new WebSocketEvent(connectionId, route, message).create()
       this._onWebSocketUsed(connectionId)

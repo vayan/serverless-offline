@@ -1,6 +1,7 @@
 import { Compile, parse } from 'velocityjs'
 import runInPollutedScope from '../javaHelpers.js'
 import debugLog from '../../../debugLog.js'
+import { log } from '../../../serverlessLog.js'
 import { isPlainObject } from '../../../utils/index.js'
 
 const { entries } = Object
@@ -31,6 +32,7 @@ function renderVelocityString(velocityString, context) {
   )
 
   debugLog('Velocity rendered:', renderResult || 'undefined')
+  log.debug('Velocity rendered:', renderResult || 'undefined')
 
   // Haaaa Velocity... this language sure loves strings a lot
   switch (renderResult) {
@@ -68,6 +70,7 @@ export default function renderVelocityTemplateObject(templateObject, context) {
   if (isPlainObject(toProcess)) {
     entries(toProcess).forEach(([key, value]) => {
       debugLog('Processing key:', key, '- value:', value)
+      log.debug('Processing key:', key, '- value:', value)
 
       if (typeof value === 'string') {
         result[key] = renderVelocityString(value, context)

@@ -18,11 +18,13 @@ export default function getHttpApiCorsConfig(httpApiCors) {
       allowedMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     }
     debugLog(c)
+    log.debug(c)
     logWarning(c)
     log.warning(c)
     return c
   }
   debugLog(httpApiCors)
+  log.debug(httpApiCors)
   logWarning(httpApiCors)
   log.warning(httpApiCors)
   return httpApiCors

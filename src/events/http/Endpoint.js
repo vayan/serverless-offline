@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'fs'
 import { resolve } from 'path'
 import OfflineEndpoint from './OfflineEndpoint.js'
 import debugLog from '../../debugLog.js'
+import { log } from '../../serverlessLog.js'
 
 const { keys } = Object
 
@@ -70,6 +71,7 @@ export default class Endpoint {
 
       fep.responseContentType = getResponseContentType(fep)
       debugLog('Response Content-Type ', fep.responseContentType)
+      log.debug('Response Content-Type ', fep.responseContentType)
 
       // load response template from http response template, or load file if exists other use default
       if (fep.response && fep.response.template) {
@@ -86,6 +88,7 @@ export default class Endpoint {
       }
     } catch (err) {
       debugLog(`Error: ${err}`)
+      log.debug(`Error: ${err}`)
     }
 
     return fep

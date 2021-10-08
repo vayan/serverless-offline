@@ -99,6 +99,7 @@ export default function createAuthScheme(authorizerOptions, provider, lambda) {
         const finalAuthorization = matchedAuthorization ? authorization : ''
 
         debugLog(`Retrieved ${identityHeader} header "${finalAuthorization}"`)
+        log.debug(`Retrieved ${identityHeader} header "${finalAuthorization}"`)
 
         event = {
           ...event,

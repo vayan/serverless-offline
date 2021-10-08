@@ -61,6 +61,7 @@ export default class DockerContainer {
     await this.#image.pull()
 
     debugLog('Run Docker container...')
+    log.debug('Run Docker container...')
 
     let permissions = 'ro'
 
