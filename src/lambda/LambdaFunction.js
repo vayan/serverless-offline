@@ -4,7 +4,7 @@ import { performance } from 'perf_hooks'
 import jszip from 'jszip'
 import HandlerRunner from './handler-runner/index.js'
 import LambdaContext from './LambdaContext.js'
-import serverlessLog, { log } from '../serverlessLog.js'
+import serverlessLog, { log, legacy } from '../serverlessLog.js'
 import resolveJoins from '../utils/resolveJoins.js'
 import {
   DEFAULT_LAMBDA_MEMORY_SIZE,
@@ -145,7 +145,7 @@ export default class LambdaFunction {
     // print message but keep working (don't error out or exit process)
     if (!supportedRuntimes.has(this.#runtime)) {
       // this.printBlankLine(); // TODO
-      console.log('')
+      legacy.consoleLog('')
       serverlessLog(
         `Warning: found unsupported runtime '${this.#runtime}' for function '${
           this.#functionKey

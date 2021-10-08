@@ -1,6 +1,6 @@
 import { Server } from 'ws'
 import debugLog from '../../debugLog.js'
-import serverlessLog, { log } from '../../serverlessLog.js'
+import serverlessLog, { log, legacy } from '../../serverlessLog.js'
 import { createUniqueId } from '../../utils/index.js'
 
 export default class WebSocketServer {
@@ -16,7 +16,8 @@ export default class WebSocketServer {
     })
 
     server.on('connection', (webSocketClient, request) => {
-      console.log('received connection')
+      legacy.consoleLog('received connection')
+      log.notice('received connection')
 
       const connectionId = createUniqueId()
 

@@ -4,6 +4,7 @@
 import nodeSchedule from 'node-schedule'
 import ScheduleEvent from './ScheduleEvent.js'
 import ScheduleEventDefinition from './ScheduleEventDefinition.js'
+import { log, legacy } from '.,/../../serverlessLog.js'
 
 // const CRON_LENGTH_WITH_YEAR = 6
 
@@ -22,7 +23,8 @@ export default class Schedule {
     const { enabled, input, rate } = scheduleEvent
 
     if (!enabled) {
-      console.log(`Scheduling [${functionKey}] cron: disabled`)
+      legacy.consoleLog(`Scheduling [${functionKey}] cron: disabled`)
+      log.notice(`Scheduling [${functionKey}] cron: disabled`)
 
       return
     }
@@ -35,7 +37,12 @@ export default class Schedule {
 
     rates.forEach((entry) => {
       const cron = this._convertExpressionToCron(entry)
-      console.log(
+      legacy.consoleLog(
+        `Scheduling [${functionKey}] cron: [${cron}] input: ${stringify(
+          input,
+        )}`,
+      )
+      log.notice(
         `Scheduling [${functionKey}] cron: [${cron}] input: ${stringify(
           input,
         )}`,
@@ -50,11 +57,17 @@ export default class Schedule {
 
           /* const result = */ await lambdaFunction.runHandler()
 
-          console.log(
+          legacy.consoleLog(
+            `Successfully invoked scheduled function: [${functionKey}]`,
+          )
+          log.notice(
             `Successfully invoked scheduled function: [${functionKey}]`,
           )
         } catch (err) {
-          console.log(
+          legacy.consoleLog(
+            `Failed to execute scheduled function: [${functionKey}] Error: ${err}`,
+          )
+          log.error(
             `Failed to execute scheduled function: [${functionKey}] Error: ${err}`,
           )
         }
@@ -87,9 +100,10 @@ export default class Schedule {
         return `0 0 */${number} * *`
 
       default:
-        console.log(
+        legacy.consoleLog(
           `scheduler: Invalid rate syntax '${rate}', will not schedule`,
         )
+        log.error(`scheduler: Invalid rate syntax '${rate}', will not schedule`)
         return null
     }
   }
@@ -101,7 +115,7 @@ export default class Schedule {
       .replace(')', '')
 
     if (scheduleEvent.startsWith('cron(')) {
-      console.log('schedule rate "cron" not yet supported!')
+      legacy.consoleLog('schedule rate "cron" not yet supported!')
       // return this._convertCronSyntax(params)
     }
 
@@ -109,7 +123,8 @@ export default class Schedule {
       return this._convertRateToCron(params)
     }
 
-    console.log('scheduler: invalid, schedule syntax')
+    legacy.consoleLog('scheduler: invalid, schedule syntax')
+    log.error('scheduler: invalid, schedule syntax')
 
     return undefined
   }

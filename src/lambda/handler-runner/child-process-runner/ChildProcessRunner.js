@@ -1,5 +1,6 @@
 import path from 'path'
 import { node } from 'execa'
+import { log, legacy } from '../../../serverlessLog.js'
 
 const childProcessHelperPath = path.resolve(__dirname, 'childProcessHelper.js')
 
@@ -58,7 +59,8 @@ export default class ChildProcessRunner {
       result = await message
     } catch (err) {
       // TODO
-      console.log(err)
+      legacy.consoleLog(err)
+      log.error(err)
 
       throw err
     }

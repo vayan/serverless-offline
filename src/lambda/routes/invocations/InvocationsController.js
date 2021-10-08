@@ -38,7 +38,8 @@ export default class InvocationsController {
       // don't await result!
       lambdaFunction.runHandler().catch((err) => {
         // TODO handle error
-        console.log(err)
+        legacy.consoleLog(err)
+        log.error(err)
         throw err
       })
 
@@ -99,7 +100,8 @@ export default class InvocationsController {
 
     // TODO FIXME
     const errMsg = `invocationType: '${invocationType}' not supported by serverless-offline`
-    console.log(errMsg)
+    legacy.consoleLog(errMsg)
+    log.error(errMsg)
 
     return {
       FunctionError: 'InvalidParameterValueException',

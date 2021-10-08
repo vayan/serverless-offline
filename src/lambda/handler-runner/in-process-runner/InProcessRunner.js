@@ -1,6 +1,7 @@
 import { performance } from 'perf_hooks'
 import * as path from 'path'
 import * as fs from 'fs'
+import { log, legacy } from '../../../serverlessLog.js'
 
 const clearModule = (fP, opts) => {
   const options = opts ?? {}
@@ -147,7 +148,8 @@ export default class InProcessRunner {
     } catch (err) {
       // this only executes when we have an exception caused by synchronous code
       // TODO logging
-      console.log(err)
+      legacy.consoleLog(err)
+      log.error(err)
       throw new Error(`Uncaught error in '${this.#functionKey}' handler.`)
     }
 
@@ -169,7 +171,8 @@ export default class InProcessRunner {
       callbackResult = await Promise.race(callbacks)
     } catch (err) {
       // TODO logging
-      console.log(err)
+      legacy.consoleLog(err)
+      log.error(err)
       throw err
     }
 

@@ -1,4 +1,5 @@
 import InProcessRunner from '../in-process-runner/index.js'
+import { log, legacy } from '../../../serverlessLog.js'
 
 // TODO handle this:
 process.on('uncaughtException', (err) => {
@@ -41,7 +42,8 @@ process.on('message', async (messageData) => {
     result = await inProcessRunner.run(event, context)
   } catch (err) {
     // TODO logging
-    console.log(err)
+    legacy.consoleLog(err)
+    log.error(err)
     throw err
   }
 

@@ -5,7 +5,7 @@ import {
   WebSocketEvent,
 } from './lambda-events/index.js'
 import debugLog from '../../debugLog.js'
-import serverlessLog, { log } from '../../serverlessLog.js'
+import serverlessLog, { log, legacy } from '../../serverlessLog.js'
 import {
   DEFAULT_WEBSOCKETS_API_ROUTE_SELECTION_EXPRESSION,
   DEFAULT_WEBSOCKETS_ROUTE,
@@ -126,7 +126,8 @@ export default class WebSocketClients {
 
       // TODO what to do with "result"?
     } catch (err) {
-      console.log(err)
+      legacy.consoleLog(err)
+      log.error(err)
       sendError(err)
     }
   }

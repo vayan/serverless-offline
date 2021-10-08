@@ -1,6 +1,7 @@
 import { EOL } from 'os'
 import fetch from 'node-fetch'
 import { invokeJavaLocal } from 'java-invoke-local'
+import { log, legacy } from '../../../serverlessLog.js'
 
 const { parse, stringify } = JSON
 const { has } = Reflect
@@ -88,7 +89,10 @@ export default class JavaRunner {
       )
       result = await response.text()
     } catch (e) {
-      console.log(
+      legacy.consoleLog(
+        'Local java server not running. For faster local invocations, run "java-invoke-local --server" in your project directory',
+      )
+      log.notice(
         'Local java server not running. For faster local invocations, run "java-invoke-local --server" in your project directory',
       )
 
@@ -106,13 +110,15 @@ export default class JavaRunner {
         '--serverless-offline',
       ]
       result = invokeJavaLocal(args, this.#env)
-      console.log(result)
+      legacy.consoleLog(result)
+      log.notice(result)
     }
 
     try {
       return this._parsePayload(result)
     } catch (err) {
-      console.log(result)
+      legacy.consoleLog(result)
+      log.notice(result)
       return err
     }
   }

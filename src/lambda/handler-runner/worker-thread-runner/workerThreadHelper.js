@@ -1,5 +1,6 @@
 import { parentPort, workerData } from 'worker_threads' // eslint-disable-line import/no-unresolved
 import InProcessRunner from '../in-process-runner/index.js'
+import { log, legacy } from '../../../serverlessLog.js'
 
 const { functionKey, handlerName, handlerPath } = workerData
 
@@ -23,7 +24,8 @@ parentPort.on('message', async (messageData) => {
   } catch (err) {
     // this only executes when we have an exception caused by synchronous code
     // TODO logging
-    console.log(err)
+    legacy.consoleLog(err)
+    log.error(err)
     throw err
   }
 

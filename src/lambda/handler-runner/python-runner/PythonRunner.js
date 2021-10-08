@@ -3,6 +3,7 @@ import { delimiter, join, relative, resolve } from 'path'
 import { spawn } from 'child_process'
 import extend from 'extend'
 import readline from 'readline'
+import { log, legacy } from '../../../serverlessLog.js'
 
 const { parse, stringify } = JSON
 const { cwd } = process
@@ -82,7 +83,8 @@ export default class PythonRunner {
         payload = json.__offline_payload__
         // everything else is print(), logging, ...
       } else {
-        console.log(item)
+        legacy.consoleLog(item)
+        log.notice(item)
       }
     }
 
@@ -103,7 +105,8 @@ export default class PythonRunner {
 
       const onErr = (data) => {
         // TODO
-        console.log(data.toString())
+        legacy.consoleLog(data.toString())
+        log.notice(data.toString())
       }
 
       const onLine = (line) => {

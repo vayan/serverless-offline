@@ -1,6 +1,7 @@
 import { EOL, platform } from 'os'
 import { relative, resolve } from 'path'
 import execa from 'execa'
+import { log, legacy } from '../../../serverlessLog.js'
 
 const { parse, stringify } = JSON
 const { cwd } = process
@@ -47,7 +48,8 @@ export default class RubyRunner {
       ) {
         payload = json.__offline_payload__
       } else {
-        console.log(item) // log non-JSON stdout to console (puts, p, logger.info, ...)
+        legacy.consoleLog(item) // log non-JSON stdout to console (puts, p, logger.info, ...)
+        log.notice(item)
       }
     }
 
@@ -95,7 +97,8 @@ export default class RubyRunner {
       result = await ruby
     } catch (err) {
       // TODO
-      console.log(err)
+      legacy.consoleLog(err)
+      log.error(err)
 
       throw err
     }
@@ -104,7 +107,8 @@ export default class RubyRunner {
 
     if (stderr) {
       // TODO
-      console.log(stderr)
+      legacy.consoleLog(stderr)
+      log.notice(stderr)
 
       return stderr
     }
@@ -113,7 +117,8 @@ export default class RubyRunner {
       return this._parsePayload(stdout)
     } catch (err) {
       // TODO
-      console.log('No JSON')
+      legacy.consoleLog('No JSON')
+      log.notice('No JSON')
 
       // TODO return or re-throw?
       return err
