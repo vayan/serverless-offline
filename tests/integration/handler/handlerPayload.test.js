@@ -351,6 +351,22 @@ describe('handler payload scehma validation tests', () => {
       body: {},
       status: 400,
     },
+    {
+      description: 'test with valid payload',
+      expectedBody: `{"foo":"bar"}`,
+      path: '/test-payload-schemas-validator',
+      body: {
+        foo: 'bar',
+      },
+      status: 200,
+    },
+
+    {
+      description: 'test with invalid payload',
+      path: '/test-payload-schemas-validator',
+      body: {},
+      status: 400,
+    },
   ].forEach(({ description, expectedBody, path, body, status }) => {
     test(description, async () => {
       const url = joinUrl(TEST_BASE_URL, path)

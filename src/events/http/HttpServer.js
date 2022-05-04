@@ -690,10 +690,11 @@ export default class HttpServer {
           ? requestTemplates[contentType]
           : ''
 
+      const requestSchema =
+        endpoint?.request?.schema || endpoint?.request?.schemas
+
       const schema =
-        typeof endpoint?.request?.schema !== 'undefined'
-          ? endpoint.request.schema[contentType]
-          : ''
+        typeof requestSchema !== 'undefined' ? requestSchema[contentType] : ''
 
       // https://hapijs.com/api#route-configuration doesn't seem to support selectively parsing
       // so we have to do it ourselves
